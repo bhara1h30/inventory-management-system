@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Inventory</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+    }
+
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: #1e293b;
+      color: white;
+      position: fixed;
+      padding-top: 20px;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: white;
+      padding: 15px 20px;
+      text-decoration: none;
+    }
+
+    .sidebar a:hover {
+      background: #334155;
+    }
+
+    .main {
+      margin-left: 220px;
+      padding: 20px;
+    }
+
+    .topbar {
+      background: white;
+      padding: 15px 20px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .topbar img {
+      width: 80px;
+      border-radius: 10px;
+    }
+
+    .grid {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .calculator {
+      margin-top: 30px;
+      background: white;
+      padding: 20px;
+      width: 300px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .calculator input {
+      width: 90%;
+      padding: 8px;
+      margin: 5px 0;
+    }
+
+    .calculator button {
+      padding: 8px 12px;
+      margin-top: 10px;
+      background: #1e293b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .logout {
+      background: red;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Inventory</h2>
+    <a href="index.html">Dashboard</a>
+    <a href="add.html">Add Product</a>
+    <a href="view.html">View Products</a>
+    <a href="about.html">About</a>
+    <a href="#" onclick="logout()">Logout</a>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <h1>Dashboard</h1>
+      <img src="https://cdn-icons-png.flaticon.com/512/891/891462.png">
+    </div>
+
+    <div class="grid" id="productGrid"></div>
+
+    <!-- Calculator -->
+    <div class="calculator">
+      <h3>Quick Calculator</h3>
+      <input type="number" id="num1" placeholder="Enter number 1">
+      <input type="number" id="num2" placeholder="Enter number 2">
+      <button onclick="calculate()">Calculate Total</button>
+      <p id="result"></p>
+    </div>
+
+  </div>
+
+  <script>
+    // Login check
+    if (localStorage.getItem("loggedIn") !== "true") {
+      window.location.href = "login.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      window.location.href = "login.html";
+    }
+
+    function loadProducts() {
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+      let grid = document.getElementById("productGrid");
+      grid.innerHTML = "";
+
+      if (products.length === 0) {
+        grid.innerHTML = "<p>No products added yet.</p>";
+        return;
+      }
+
+      products.forEach(p => {
+        let card = `
+          <div class="card">
+            <img src="${p.image || 'https://via.placeholder.com/300'}">
+            <h3>${p.name}</h3>
+            <p>${p.category}</p>
+            <p>Qty: ${p.quantity}</p>
+            <p>₹${p.price}</p>
+          </div>
+        `;
+        grid.innerHTML += card;
+      });
+    }
+
+    function calculate() {
+      let a = Number(document.getElementById("num1").value);
+      let b = Number(document.getElementById("num2").value);
+      document.getElementById("result").innerText = "Total: " + (a + b);
+    }
+
+    loadProducts();
+  </script>
+
+</body>
+</html>
