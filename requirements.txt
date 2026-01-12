@@ -1,0 +1,4 @@
+Flask
+flask-mysql
+mysql-connector-python
+and database sql
