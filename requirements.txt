@@ -1,3 +1,0 @@
-Flask
-flask-mysql
-mysql-connector-python
